@@ -1,0 +1,85 @@
+
+/* sign in  */
+
+.signin {
+  background-color: #193046;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 40px;
+  position: relative;
+  z-index: 0;
+}
+
+.signin-wrapper {
+  margin: 0 auto;
+  width: 700px;
+}
+
+.signin-wrapper .title {
+  font-size: 60px;
+  color: white;
+}
+
+.signin-wrapper .subtitle {
+  font-size: 24px;
+  color: #B3AEB1;
+  margin-top: 10px;
+}
+
+.signin-wrapper .box {
+  margin-top: 20px;
+  background-color: white;
+  display: grid;
+  grid-template-rows: 500px;
+  grid-template-columns: 260px 1fr;
+  grid-template-areas: 
+  "photo form";
+  border-radius: 5px;
+}
+
+.signin-wrapper .photo {
+  grid-area: photo;
+  background-image: url("../../images/signin-bg.jpg");
+  background-size: cover;
+  background-position: 25% 25%;
+}
+
+.signin-wrapper .form {
+  grid-area: form;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.signin-wrapper .error {
+  margin-bottom: 20px;
+}
+
+.signin-wrapper .form .form-title {
+  font-size: 30px;
+  color: #777373;
+  transition: transform 1s cubic-bezier(.7,-0.39,.31,1.38);
+}
+
+.signin-wrapper .form .form-title:hover {
+  transform: scale(1.2);
+}
+
+.signin-wrapper .form label {
+  font-size: 16px;
+  color: #000000;
+  margin-top: 40px;
+}
+
+.signin-wrapper .form input {
+  margin-top: 10px;
+}
+
+.signin-wrapper .form button {
+  margin-top: 60px;
+  transition: background-color 1s;
+}
+
+.signin-wrapper .form button:hover {
+  background-color: red;
+}

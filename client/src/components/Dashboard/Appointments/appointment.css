@@ -1,0 +1,105 @@
+/*dashboard*/
+
+.appointment-home .filter {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+}
+
+/*filter area*/
+
+.appointment-home .filter {
+    margin-top: 30px;
+}
+
+/*calander*/
+
+.CalendarDay__default {
+    line-height: 35px;
+}
+
+/*day selection*/
+
+.appointment-home .filter .selection-area {
+    display: flex;
+    flex-direction: row;
+}
+
+.appointment-home .filter .selection-area a {
+    width: 100px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    border-radius: 6px;
+}
+
+/*modals*/
+
+.new-appointment-modal div.content {
+    grid-template-columns: 0.9fr;
+    padding-bottom: 400px;
+}
+
+.new-appointment-modal label {
+    display: block;
+    margin: 20px 0 .28571429rem 0;
+    color: rgba(0,0,0,.87);
+    font-size: .92857143em;
+    font-weight: 700;
+}
+
+.new-appointment-modal .time-slots {
+    padding: 20px;
+    width: 650px;
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid #DEDEDF;
+}
+
+.new-appointment-modal .time-slots-error {
+    border: 1px solid #DEB4B6;
+    background-color: #FFF6F6;
+}
+
+.new-appointment-modal .time-slots ul {
+    columns: 3;
+}
+
+.new-appointment-modal .time-slots ul li {
+    line-height: 1.4em;
+}
+
+.new-appointment-modal .time-slots ul li a.selected {
+    color: #3E9D45;
+}
+
+.new-appointment-modal .time-slots ul li a {
+    color: black;
+}
+
+.new-appointment-modal .time-slots ul li.unavailable {
+    color: #8D8B8B;
+}
+
+/*semantic ui dropdown*/
+@media only screen and (max-width: 767px) {
+    .ui.search.dropdown .menu {
+        max-height: 300px;
+    }
+    .ui.selection.dropdown .menu {
+        max-height: 350px;
+    }
+}
+
+/*react date date*/
+.DateInput_input {
+    font-family: var(--main-font), sans-serif;
+}
+
+/*react table*/
+
+.ReactTable * {
+    font-family: var(--main-font), sans-serif;
+}

@@ -1,0 +1,67 @@
+body {
+  --main-font: "Roboto";
+  font-family: var(--main-font), sans-serif;
+  --modal-padding: 10px;
+  box-sizing: border-box;
+  --main-button-color: #F5B1B3;
+  --main-button-hover-color: #FA6060;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wrapper {
+  position: relative;
+}
+
+.modal {
+  left: 0;
+  top: 0;
+  position: absolute;
+  background-color: #F4F5F8;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  /*overflow: hidden;*/
+}
+
+/*error*/
+
+#error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  width: 300px;
+  border: 1px solid white;
+  background-color: #DEDEDF;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 100;
+}
+
+#error a {
+  align-self: flex-end;
+  color: black;
+}
+
+#error div {
+  margin-top: 20px;
+  color: black;
+  margin-bottom: 40px;
+}
+
+/*main button color*/
+
+a.main-button-color {
+  background-color: var(--main-button-color);
+  color: white;
+  transition: background-color .5s ease-in-out;
+}
+
+a.main-button-color:hover {
+  background-color: var(--main-button-hover-color)
+}

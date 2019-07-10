@@ -138,10 +138,12 @@ module.exports = {
 
       // transform date to huamn readable
       items = items.map((item) => {
-        // console.log(item);
+        console.log('1');
+        console.log(item);
         return convertDateFieldsInAppointmentToHumanReadable(item);
       });
 
+      console.log('2');
       console.log(items);
 
       return items;

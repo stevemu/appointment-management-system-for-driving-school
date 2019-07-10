@@ -179,6 +179,10 @@ export default class extends Component {
     // console.log('slots:');
     // console.log(this.state.instructorTimeSlots);
     let lis = this.state.instructorTimeSlots.map(({ time, isAvailable, classType }) => {
+      // console.log(time);
+      // console.log(this.state.time);
+      // console.log(isAvailable);
+
       if (isAvailable) {
         let selected = "";
         let className = "";

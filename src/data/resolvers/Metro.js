@@ -202,6 +202,7 @@ module.exports = {
       for (let i = 0; i <= 36; i++) {
 
         // get appointments at this time
+        console.log(dateMt.utc().format());
         let rDate = r.ISO8601(dateMt.utc().format()); // make an copy to preserve the non-utc date in the original moment
         let result = await r.db(DB).table(APPOINTMENTS).filter({
           startTime: rDate,

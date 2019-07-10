@@ -197,7 +197,7 @@ module.exports = {
       console.log(date);
       let dateMt = moment.utc(date, "L Z");
 
-      dateMt.hour(12);
+      dateMt.hour(8);
       console.log(dateMt);
       // console.log(dateMt.utc().format());
 

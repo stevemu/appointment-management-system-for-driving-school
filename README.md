@@ -2,6 +2,15 @@
 
 This is an open source appointment management system for driving schools
 
+## Demo
+
+Url: https://metro.stevemu.com
+
+Username: admin
+
+Password: demo
+
+
 ## Tech Stack
 
 + Node.js
@@ -9,6 +18,6 @@ This is an open source appointment management system for driving schools
 + GraphQL
 + Rethinkdb
 
-## todo
+## Todo
 
 now the server use moment.utcOffset("-04:00") to return result of EDT time zone result. This won't work for people not in EDT zone. Possible solution: store timezone in user object.

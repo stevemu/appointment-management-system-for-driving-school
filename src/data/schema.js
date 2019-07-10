@@ -1,7 +1,13 @@
 let { makeExecutableSchema, addMockFunctionsToSchema } = require( 'graphql-tools');
 let resolvers = require( './resolvers');
 
+
+// allAppointments(pageSize: Int, page: Int): AppointmentsResult
+
+
 const typeDefs = `
+
+
 
 type Query {
   students(pageSize: Int, page: Int, filter: FilterInput): StudentsResult
@@ -16,10 +22,11 @@ type Query {
   timeSlotsByInstructor(instructorId: ID, date: String): [TimeSlot]
 
   appointmentById(id: ID): Appointment
-  allAppointments(pageSize: Int, page: Int): AppointmentsResult
   appointmentsByDate(date: String): [Appointment]
   isAppointmentExist(instructorId: ID, time: String): Boolean
 }
+
+
 
 type TimeSlot {
   time: String

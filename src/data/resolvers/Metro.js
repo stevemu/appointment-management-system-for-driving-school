@@ -96,38 +96,37 @@ module.exports = {
 
     // appointment
 
-    allAppointments: isAuthenticatedResolver.createResolver(async (parent, { pageSize, page }, { r }) => {
+    // allAppointments: isAuthenticatedResolver.createResolver(async (parent, { pageSize, page }, { r }) => {
 
-      let firstItem = pageSize * page;
-      let endVal = pageSize * page + pageSize;
+    //   let firstItem = pageSize * page;
+    //   let endVal = pageSize * page + pageSize;
 
-      let items = await r.db(DB).table(APPOINTMENTS)
-        .orderBy({ index: r.desc("startTime") })
-        .slice(firstItem, endVal);
-      let count = await r.db(DB).table(APPOINTMENTS).count();
-      let pages = Math.floor(count / pageSize);
+    //   let items = await r.db(DB).table(APPOINTMENTS)
+    //     .orderBy({ index: r.desc("startTime") })
+    //     .slice(firstItem, endVal);
+    //   let count = await r.db(DB).table(APPOINTMENTS).count();
+    //   let pages = Math.floor(count / pageSize);
 
-      // transform date to huamn readable
-      items = items.map((item) => {
-        // console.log(item);
-        return convertDateFieldsInAppointmentToHumanReadable(item);
-      });
+    //   // transform date to huamn readable
+    //   items = items.map((item) => {
+    //     return convertDateFieldsInAppointmentToHumanReadable(item);
+    //   });
 
-      let result = {
-        appointments: items,
-        page,
-        pageSize,
-        pages
-      };
+    //   let result = {
+    //     appointments: items,
+    //     page,
+    //     pageSize,
+    //     pages
+    //   };
 
-      return result;
-    }),
+    //   return result;
+    // }),
 
     appointmentsByDate: isAuthenticatedResolver.createResolver(async (parent, { date }, { r }) => {
 
       // console.log(date);
       let mDate = moment(date, "L");
-      console.log(mDate);
+      // console.log(mDate);
 
       // filter by date
       // get pagination result
@@ -137,22 +136,12 @@ module.exports = {
           return item("startTime").date().eq(r.time(mDate.year(), mDate.month() + 1, mDate.date(), "Z"));
         });
 
-      // transform date to huamn readable
-      items = items.map((item) => {
-        console.log('1');
-        console.log(item);
-        return convertDateFieldsInAppointmentToHumanReadable(item);
-      });
-
-      console.log('2');
-      console.log(items);
-
       return items;
     }),
 
     appointmentById: isAuthenticatedResolver.createResolver(async (_, { id }, { r }) => {
       let item = await r.db(DB).table(APPOINTMENTS).get(id);
-      return convertDateFieldsInAppointmentToHumanReadable(item);
+      return item;
     }),
 
     isAppointmentExist: isAuthenticatedResolver.createResolver(async (_, { instructorId, time }, { r }) => {
@@ -166,7 +155,7 @@ module.exports = {
         startTime: rTime
       })
 
-      console.log(items);
+      // console.log(items);
       // return convertDateFieldsInAppointmentToHumanReadable(item);
 
       return true;
@@ -426,10 +415,10 @@ module.exports = {
       return item;
     },
     date: async (parent, params, { r }) => {
-      return moment(parent.startTime).format("L");
+      return moment(parent.startTime).utcOffset("-04:00").format("L");
     },
     time: async (parent, params, { r }) => {
-      return moment(parent.startTime).format("LT");
+      return moment(parent.startTime).utcOffset("-04:00").format("LT");
     }
 
 

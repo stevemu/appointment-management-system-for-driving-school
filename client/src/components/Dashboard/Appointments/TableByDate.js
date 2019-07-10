@@ -67,6 +67,8 @@ export default class extends Component {
             this.updateTableData();
           }
 
+          // console.log(data);
+
           let {
             currentAppointmentsByDateTableData,
             isAppointmentByDateTableLoading

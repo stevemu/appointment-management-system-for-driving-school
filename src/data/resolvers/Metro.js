@@ -193,18 +193,16 @@ module.exports = {
 
       let slots = [];
 
-      // get the date
-      // add 15m, convert to rdate, query
-
+      // get the date from client with timezone, start from 8am, to 5pm
       let dateMt = moment(date, "L Z");
+      // console.log(dateMt);
       dateMt.hour(8);
+      // console.log(dateMt.utc().format());
 
       for (let i = 0; i <= 36; i++) {
 
-        let dateMtCopy = moment(dateMt);
-
         // get appointments at this time
-        let rDate = r.ISO8601(dateMtCopy.format()); // make an copy to preserve the non-utc date in the original moment
+        let rDate = r.ISO8601(dateMt.utc().format()); // make an copy to preserve the non-utc date in the original moment
         let result = await r.db(DB).table(APPOINTMENTS).filter({
           startTime: rDate,
           instructorId
@@ -223,14 +221,14 @@ module.exports = {
         }
 
         // generate time text
-        let timeText = dateMt.format("LT");
+        let timeText = dateMt.local().format("LT");
         slots.push({
           time: timeText,
           isAvailable,
           classType,
           instructorName: name
         });
-
+        // add 15m
         dateMt.add(15, "m");
       }
 

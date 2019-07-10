@@ -129,7 +129,7 @@ export default class extends Component {
       fetchPolicy: "network-only"
     })
 
-    console.log(res);
+    // console.log(res);
 
     this.setState({
       instructorTimeSlots: res.data.timeSlotsByInstructor,

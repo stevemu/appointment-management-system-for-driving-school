@@ -40,7 +40,7 @@ export default class extends Component {
 
     });
 
-    console.log(res);
+    // console.log(res);
 
     // write to the global store
     this.client.writeData({

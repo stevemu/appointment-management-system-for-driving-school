@@ -7,8 +7,6 @@ let resolvers = require( './resolvers');
 
 const typeDefs = `
 
-
-
 type Query {
   students(pageSize: Int, page: Int, filter: FilterInput): StudentsResult
   student(id: ID): Student

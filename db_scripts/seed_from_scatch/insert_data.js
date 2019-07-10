@@ -62,6 +62,7 @@ async function run() {
     })
 
     // appointments
+    await r.db(db).table("Appointments").delete();
     await r.db(db).table("Appointments").insert({
         "carId":  "EZ1002" ,
         "classType":  "One Class" ,

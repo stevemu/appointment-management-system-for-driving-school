@@ -481,7 +481,7 @@ export default class extends Component {
                       // generate an object to be sent to backend
                       let input = {
                         id: this.state.id,
-                        date: this.state.date,
+                        date: this.state.date.replace(/C/g, ''),
                         time: this.state.time,
                         timezoneOffset: moment().format("Z"),
                         studentId: this.state.student.id,
@@ -498,10 +498,9 @@ export default class extends Component {
 
                     } else {
 
-                    
                       // create new appt
                       let input = {
-                        date: this.state.date,
+                        date: this.state.date.replace(/C/g, ''),
                         time: this.state.time,
                         timezoneOffset: moment().format("Z"),
                         studentId: this.state.student.id,
@@ -511,7 +510,7 @@ export default class extends Component {
                         note: this.state.note
                       };
 
-                      // console.log(input);
+                      console.log(input);
 
                       let res = await this.client.mutate({
                         mutation: CREATE_APPOINTMENT,

@@ -99,7 +99,7 @@ export default class extends Component {
                       onChange={this.handleFieldChange} autoComplete="first day"
                       error={this.state.firstDayError}
                     />
-                    <Form.Input label="Gender" width={5} name="gender" value={this.state.gender}
+                    <Form.Input label="Gender (M/F)" width={5} name="gender" value={this.state.gender}
                       onChange={this.handleFieldChange} autoComplete="gender" />
                     <Form.Input label="Dob (mm/dd/yyyy)" width={5} name="dob" value={this.state.dob}
                       onChange={this.handleFieldChange} autoComplete="dob"

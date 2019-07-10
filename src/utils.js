@@ -65,7 +65,7 @@ function sanitizeFieldsInStudentInput(input) {
     ...input,
     name: input.name ? input.name.toUpperCase() : '',
     learnerPermitNo: input.learnerPermitNo ? input.learnerPermitNo.toUpperCase() : '',
-    addresss: input.addresss ? input.addresss.toUpperCase() : ''
+    address: input.address ? input.address.toUpperCase() : ''
   };
   return input;
 }
@@ -74,6 +74,8 @@ function sanitizeFieldsInStudentInput(input) {
 
 function convertDateFieldsInAppointmentToHumanReadable(item) {
 
+  // bug: if user is not in the same timezone as the server is in,
+  // the date will be off
   item = {
     ...item,
     date: moment(item.startTime).format("L"),
@@ -85,14 +87,12 @@ function convertDateFieldsInAppointmentToHumanReadable(item) {
 
 function convertDateTimeToRDate(date, time, timezoneOffset, r) {
   let dateTime = date + " " + time + " " + timezoneOffset;
-  console.log(dateTime);
   let m = moment.utc(dateTime, "MM/DD/YYYY h:mm a Z", true);
-  // console.log(m);
-
+  if (!m.isValid()) {
+    throw "Invalid date: " + dateTime
+  }
   return r.ISO8601(m.utc().format());
 }
-
-
 
 module.exports = {
   getUserId,

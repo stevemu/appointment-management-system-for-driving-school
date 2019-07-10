@@ -204,7 +204,7 @@ module.exports = {
         let dateMtCopy = moment(dateMt);
 
         // get appointments at this time
-        let rDate = r.ISO8601(dateMtCopy.utc().format()); // make an copy to preserve the non-utc date in the original moment
+        let rDate = r.ISO8601(dateMtCopy.format()); // make an copy to preserve the non-utc date in the original moment
         let result = await r.db(DB).table(APPOINTMENTS).filter({
           startTime: rDate,
           instructorId

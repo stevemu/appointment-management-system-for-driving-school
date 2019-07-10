@@ -124,7 +124,7 @@ export default class extends Component {
       query: GET_TIMESLOTS_BY_INSTRUCTOR,
       variables: {
         instructorId: value,
-        date: this.state.date
+        date: this.state.date + " " + moment().format("Z"),
       },
       fetchPolicy: "network-only"
     })

@@ -194,6 +194,7 @@ module.exports = {
       let slots = [];
 
       // get the date from client with timezone, start from 8am, to 5pm
+      console.log(date);
       let dateMt = moment(date, "L Z");
       // console.log(dateMt);
       dateMt.hour(8);

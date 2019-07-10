@@ -26,7 +26,6 @@ function convertDateFieldsInStudentToHumanReadable(item) {
 function validateDateFieldsInStudent(input) {
 
   var dateReg = /^\d{2}([./-])\d{2}\1\d{4}$/
-  "22/03/1981".match(dateReg) // matches
 
   let validated = true;
 

@@ -245,8 +245,11 @@ module.exports = {
     // student
 
     updateStudent: isAuthenticatedResolver.createResolver(async (_, { studentInput: input }, { r }) => {
-   
+      if (!validateDateFieldsInStudent(input, 'mm/dd/yyyy')) {
+        throw 'Input dates format are not in mm/dd/yyyy'
+      }
       input = convertDateFieldsInStudentInputToRethinkdbFormat(r, input);
+      input = sanitizeFieldsInStudentInput(input);
       await r.db(DB).table(STUDENTS).get(input.id).update(input);
       let item = await r.db(DB).table(STUDENTS).get(input.id);
       item = convertDateFieldsInStudentToHumanReadable(item);

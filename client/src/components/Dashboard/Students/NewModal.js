@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {MdClose} from 'react-icons/lib/md';
-import {Query, Mutation, ApolloConsumer} from "react-apollo";
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
-import {Form, Checkbox, Loader} from 'semantic-ui-react'
+import React, { Component } from 'react';
+import { MdClose } from 'react-icons/lib/md';
+import { Query, Mutation, ApolloConsumer } from "react-apollo";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Form, Checkbox, Loader } from 'semantic-ui-react'
 
-import {CREATE_STUDENT, UPDATE_STUDENT, GET_STUDENT, GET_STUDENTS, refetchGetStudentsQuery} from './queries';
+import { CREATE_STUDENT, UPDATE_STUDENT, GET_STUDENT, GET_STUDENTS, refetchGetStudentsQuery } from './queries';
 import gql from "graphql-tag";
 import LoadingSaveButton from '../../LoadingSaveButton';
 
@@ -36,30 +36,33 @@ export default class extends Component {
 
   handleFieldChange = (e) => {
     // console.log(e.target.type);
-    let {name, value} = e.target;
+    let { name, value } = e.target;
     // console.log(name);
     // console.log(value);
-    this.setState({[name]: value});
+    this.setState({ [name]: value });
   }
 
   validate = () => {
     let pass = true;
     if (this.state.name == "") {
-      this.setState({nameError: true});
+      this.setState({ nameError: true });
       pass = false;
     }
-    // if (this.state.firstDay == "") {
-    //   this.setState({firstDayError: true});
-    //   pass = false;
-    // }
-    // if (this.state.learnerPermitExp == "") {
-    //   this.setState({learnerPermitExpError: true});
-    //   pass = false;
-    // }
-    // if (this.state.dob == "") {
-    //   this.setState({dobError: true});
-    //   pass = false;
-    // }
+
+    var dateReg = /^\d{2}([./-])\d{2}\1\d{4}$/
+
+    if (this.state.firstDay && !this.state.firstDay.match(dateReg)) {
+      this.setState({ firstDayError: true });
+      pass = false;
+    }
+    if (this.state.learnerPermitExp && !this.state.learnerPermitExp.match(dateReg)) {
+      this.setState({ learnerPermitExpError: true });
+      pass = false;
+    }
+    if (this.state.dob && !this.state.dob.match(dateReg)) {
+      this.setState({ dobError: true });
+      pass = false;
+    }
 
     return pass;
   }
@@ -75,7 +78,7 @@ export default class extends Component {
               <div><a href="" onClick={(e) => {
                 if (e) e.preventDefault();
                 this.props.history.goBack()
-              }}><MdClose className="close"/></a></div>
+              }}><MdClose className="close" /></a></div>
             </header>
             <div className="content">
               <main>
@@ -93,53 +96,53 @@ export default class extends Component {
                   />
                   <Form.Group>
                     <Form.Input label="First Day (mm/dd/yyyy)" width={5} name="firstDay" value={this.state.firstDay}
-                                onChange={this.handleFieldChange} autoComplete="first day"
-                    error={this.state.firstDayError}
+                      onChange={this.handleFieldChange} autoComplete="first day"
+                      error={this.state.firstDayError}
                     />
                     <Form.Input label="Gender" width={5} name="gender" value={this.state.gender}
-                                onChange={this.handleFieldChange} autoComplete="gender"/>
+                      onChange={this.handleFieldChange} autoComplete="gender" />
                     <Form.Input label="Dob (mm/dd/yyyy)" width={5} name="dob" value={this.state.dob}
-                                onChange={this.handleFieldChange} autoComplete="dob"
-                                error={this.state.dobError}
+                      onChange={this.handleFieldChange} autoComplete="dob"
+                      error={this.state.dobError}
                     />
                   </Form.Group>
                   <Form.Group>
                     <Form.Input label="Learner Permit No." width={5} name="learnerPermitNo"
-                                value={this.state.learnerPermitNo} onChange={this.handleFieldChange}
-                                autoComplete="learnerPermitNo"/>
+                      value={this.state.learnerPermitNo} onChange={this.handleFieldChange}
+                      autoComplete="learnerPermitNo" />
                     <Form.Input label="Exp (mm/dd/yyyy)" width={5} name="learnerPermitExp"
-                                value={this.state.learnerPermitExp} onChange={this.handleFieldChange}
-                                autoComplete="learnerPermitExp"
-                                error={this.state.learnerPermitExpError}
+                      value={this.state.learnerPermitExp} onChange={this.handleFieldChange}
+                      autoComplete="learnerPermitExp"
+                      error={this.state.learnerPermitExpError}
                     />
                     <Form.Input label="Phone" width={5} name="phone" value={this.state.phone}
-                                onChange={this.handleFieldChange} autoComplete="phone"/>
+                      onChange={this.handleFieldChange} autoComplete="phone" />
                   </Form.Group>
                   <Form.Group>
                     <Form.Input label="Address" width={10} name="address" value={this.state.address}
-                                onChange={this.handleFieldChange} autoComplete="new-user-address"/>
+                      onChange={this.handleFieldChange} autoComplete="new-user-address" />
                     <Form.Input label="Zip" width={5} name="zip" value={this.state.zip}
-                                onChange={this.handleFieldChange} autoComplete="zip"/>
+                      onChange={this.handleFieldChange} autoComplete="zip" />
                   </Form.Group>
                   <Form.Field>
                     <Checkbox label='Discontinue' name="discontinue" checked={this.state.discontinue} onChange={() => {
                       // toggle discontinue
-                      this.setState({discontinue: !this.state.discontinue})
-                    }}/>
+                      this.setState({ discontinue: !this.state.discontinue })
+                    }} />
                   </Form.Field>
                   <Form.Field>
                     <Checkbox label='Call' name="call" checked={this.state.call} onChange={this.handleFieldChange}
-                              onChange={() => {
-                                // toggle discontinue
-                                this.setState({call: !this.state.call})
-                              }}/>
+                      onChange={() => {
+                        // toggle discontinue
+                        this.setState({ call: !this.state.call })
+                      }} />
                   </Form.Field>
                 </Form>
               </main>
               <aside>
                 <Form>
                   <Form.TextArea label='Notes' name="notes" value={this.state.notes} onChange={this.handleFieldChange}
-                                 autoComplete="notes"/>
+                    autoComplete="notes" />
                 </Form>
               </aside>
             </div>
@@ -154,10 +157,10 @@ export default class extends Component {
               <Mutation
                 mutation={CREATE_STUDENT}
               >
-                {(createStudent, {data, loading, error}) => {
+                {(createStudent, { data, loading, error }) => {
 
                   // console.log(data);
-                  if (loading) return <LoadingSaveButton/>;
+                  if (loading) return <LoadingSaveButton />;
 
                   // if mutation is successful, go back to previous page
                   if (data) {
@@ -179,8 +182,8 @@ export default class extends Component {
                         ...vars
                       } = this.state;
 
-                      console.log(this.state);
-                      await createStudent({variables: {studentInput: vars}});
+                      // console.log(this.state);
+                      await createStudent({ variables: { studentInput: vars } });
 
                       // refetch student table data
                       await client.mutate({
@@ -192,8 +195,8 @@ export default class extends Component {
                       })
 
                     }}>{
-                      error ? "Error, try again" : "Save"
-                    }</a>
+                        error ? "Error, try again" : "Save"
+                      }</a>
                   )
                 }}
               </Mutation>

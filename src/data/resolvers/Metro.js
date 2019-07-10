@@ -224,7 +224,7 @@ module.exports = {
         }
 
         // generate time text
-        let timeText = dateMt.local().format("LT");
+        let timeText = dateMt.utc().format("LT");
         slots.push({
           time: timeText,
           isAvailable,

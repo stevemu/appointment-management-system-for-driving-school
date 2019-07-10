@@ -1,4 +1,4 @@
-scripts
+seed_full
 
 # Logs
 logs
@@ -37,4 +37,4 @@ node_modules
 .idea/
 blog.sqlite
 
-accounts.txt
+passwords.txt

@@ -1,5 +1,5 @@
 let moment = require("moment/moment");
-let momentz  = require("moment-timezone");
+let momentz = require("moment-timezone");
 const jwt = require('jsonwebtoken');
 
 function getUserId(token, secret) {
@@ -15,31 +15,58 @@ function convertDateFieldsInStudentToHumanReadable(item) {
 
   item = {
     ...item,
-    dob: moment(item.dob).format("L"),
-    firstDay: moment(item.firstDay).format("L"),
-    learnerPermitExp: moment(item.learnerPermitExp).format("L"),
+    dob: item.dob ? moment(item.dob).format("L") : '',
+    firstDay: item.firstDay ? moment(item.firstDay).format("L") : '',
+    learnerPermitExp: item.learnerPermitExp ? moment(item.learnerPermitExp).format("L") : '',
   };
 
   return item;
 }
 
+function validateDateFieldsInStudent(input) {
+
+  var dateReg = /^\d{2}([./-])\d{2}\1\d{4}$/
+  "22/03/1981".match(dateReg) // matches
+
+  let validated = true;
+
+  // date fields: dob, firstDay, learnerPermitExp
+  if (input.dob && !input.dob.match(dateReg)) {
+    validated = false;
+  }
+  if (input.firstDay && !input.firstDay.match(dateReg)) {
+    validated = false;
+  }
+  if (input.learnerPermitExp && !input.learnerPermitExp.match(dateReg)) {
+    validated = false;
+  }
+
+  return validated;
+}
+
 function convertDateFieldsInStudentInputToRethinkdbFormat(r, input) {
+  // console.log(input);
+
   input = {
     ...input,
-    firstDay: r.ISO8601(moment(input.firstDay, "L").utc().format()),
-    dob: r.ISO8601(moment(input.dob, "L").utc().format()),
-    learnerPermitExp: r.ISO8601(moment(input.learnerPermitExp, "L").utc().format())
+    firstDay: input.firstDay ?
+      r.ISO8601(moment(input.firstDay, "L").utc().format()) :
+      r.ISO8601(moment().utc().format()),
+    dob: input.dob ? r.ISO8601(moment(input.dob, "L").utc().format()) : '',
+    learnerPermitExp: input.learnerPermitExp ?
+      r.ISO8601(moment(input.learnerPermitExp, "L").utc().format()) : ''
   };
   return input;
 }
 
 // convert to uppercase
 function sanitizeFieldsInStudentInput(input) {
+  // console.log(input);
   input = {
     ...input,
-    name: input.name.toUpperCase(),
-    learnerPermitNo: input.learnerPermitNo.toUpperCase(),
-    addresss: input.addresss.toUpperCase()
+    name: input.name ? input.name.toUpperCase() : '',
+    learnerPermitNo: input.learnerPermitNo ? input.learnerPermitNo.toUpperCase() : '',
+    addresss: input.addresss ? input.addresss.toUpperCase() : ''
   };
   return input;
 }
@@ -57,7 +84,7 @@ function convertDateFieldsInAppointmentToHumanReadable(item) {
   return item;
 }
 
-function convertDateTimeToRDate (date, time, r) {
+function convertDateTimeToRDate(date, time, r) {
 
   // calculate the startTime
   let mDate = momentz.tz(date, "L", "America/New_York");
@@ -78,5 +105,6 @@ module.exports = {
   convertDateFieldsInAppointmentToHumanReadable,
   convertDateFieldsInStudentInputToRethinkdbFormat,
   sanitizeFieldsInStudentInput,
-  convertDateTimeToRDate
+  convertDateTimeToRDate,
+  validateDateFieldsInStudent
 };

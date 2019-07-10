@@ -1,27 +1,28 @@
-let {isAuthenticatedResolver}  = require( './acl');
-let {APP_CONSTANTS}  = require( '../../config');
-let moment  = require( 'moment');
-let momentz  = require( 'moment-timezone');
+let { isAuthenticatedResolver } = require('./acl');
+let { APP_CONSTANTS } = require('../../config');
+let moment = require('moment');
+let momentz = require('moment-timezone');
 
-let {STUDENTS, APPOINTMENTS, DB, CARS, INSTRUCTORS} = APP_CONSTANTS;
+let { STUDENTS, APPOINTMENTS, DB, CARS, INSTRUCTORS } = APP_CONSTANTS;
 let {
   convertDateFieldsInStudentToHumanReadable,
   convertDateFieldsInAppointmentToHumanReadable,
   convertDateFieldsInStudentInputToRethinkdbFormat,
   sanitizeFieldsInStudentInput,
-  convertDateTimeToRDate
-} = require( '../../utils');
+  convertDateTimeToRDate,
+  validateDateFieldsInStudent
+} = require('../../utils');
 
 module.exports = {
   Query: {
 
     // student
 
-    students: isAuthenticatedResolver.createResolver(async (parent, {pageSize, page, filter = {filters: []}}, {r}) => {
+    students: isAuthenticatedResolver.createResolver(async (parent, { pageSize, page, filter = { filters: [] } }, { r }) => {
 
       //get data in order
       let items = await r.db(DB).table(STUDENTS)
-        .orderBy({index: r.desc("firstDay")});
+        .orderBy({ index: r.desc("firstDay") });
 
       // transform date to huamn readable
       items = items.map((item) => {
@@ -61,20 +62,20 @@ module.exports = {
       return result;
     }),
 
-    student: isAuthenticatedResolver.createResolver(async (_, {id}, {r}) => {
+    student: isAuthenticatedResolver.createResolver(async (_, { id }, { r }) => {
       let item = await r.db(DB).table(STUDENTS).get(id);
       item = convertDateFieldsInStudentToHumanReadable(item);
       // console.log(item);
       return item;
     }),
 
-    studentSearch: isAuthenticatedResolver.createResolver(async (_, {query}, {r}) => {
+    studentSearch: isAuthenticatedResolver.createResolver(async (_, { query }, { r }) => {
 
       query = query.toUpperCase();
       // console.log(query);
       //get data in order
       let items = await r.db(DB).table(STUDENTS)
-        .orderBy({index: r.desc("firstDay")});
+        .orderBy({ index: r.desc("firstDay") });
 
       // transform date to huamn readable
       items = items.map((item) => {
@@ -95,13 +96,13 @@ module.exports = {
 
     // appointment
 
-    allAppointments: isAuthenticatedResolver.createResolver(async (parent, {pageSize, page}, {r}) => {
+    allAppointments: isAuthenticatedResolver.createResolver(async (parent, { pageSize, page }, { r }) => {
 
       let firstItem = pageSize * page;
       let endVal = pageSize * page + pageSize;
 
       let items = await r.db(DB).table(APPOINTMENTS)
-        .orderBy({index: r.desc("startTime")})
+        .orderBy({ index: r.desc("startTime") })
         .slice(firstItem, endVal);
       let count = await r.db(DB).table(APPOINTMENTS).count();
       let pages = Math.floor(count / pageSize);
@@ -122,7 +123,7 @@ module.exports = {
       return result;
     }),
 
-    appointmentsByDate: isAuthenticatedResolver.createResolver(async (parent, {date}, {r}) => {
+    appointmentsByDate: isAuthenticatedResolver.createResolver(async (parent, { date }, { r }) => {
 
       // console.log(date);
       let mDate = moment(date, "L");
@@ -130,7 +131,7 @@ module.exports = {
       // filter by date
       // get pagination result
       let items = await r.db(DB).table(APPOINTMENTS)
-        .orderBy({index: r.asc("startTime")})
+        .orderBy({ index: r.asc("startTime") })
         .filter(function (item) {
           return item("startTime").date().eq(r.time(mDate.year(), mDate.month() + 1, mDate.date(), "Z"));
         });
@@ -138,12 +139,12 @@ module.exports = {
       return items;
     }),
 
-    appointmentById: isAuthenticatedResolver.createResolver(async (_, {id}, {r}) => {
+    appointmentById: isAuthenticatedResolver.createResolver(async (_, { id }, { r }) => {
       let item = await r.db(DB).table(APPOINTMENTS).get(id);
       return convertDateFieldsInAppointmentToHumanReadable(item);
     }),
 
-    isAppointmentExist: isAuthenticatedResolver.createResolver(async (_, {instructorId, time}, {r}) => {
+    isAppointmentExist: isAuthenticatedResolver.createResolver(async (_, { instructorId, time }, { r }) => {
 
       // console.log(moment(time).utc().format());
       let rTime = r.ISO8601(moment(time).utc().format());
@@ -162,33 +163,33 @@ module.exports = {
 
     // car
 
-    cars: isAuthenticatedResolver.createResolver(async (_, params, {r}) => {
+    cars: isAuthenticatedResolver.createResolver(async (_, params, { r }) => {
       let items = await r.db(DB).table(CARS);
       return items;
     }),
 
-    car: isAuthenticatedResolver.createResolver(async (_, params, {r}) => {
+    car: isAuthenticatedResolver.createResolver(async (_, params, { r }) => {
       let item = await r.db(DB).table(CARS).get(params.id);
       return item;
     }),
 
     // instructor
 
-    allInstructors: isAuthenticatedResolver.createResolver(async (_, params, {r}) => {
+    allInstructors: isAuthenticatedResolver.createResolver(async (_, params, { r }) => {
       let items = await r.db(DB).table(INSTRUCTORS);
       return items;
     }),
 
-    instructor: isAuthenticatedResolver.createResolver(async (_, params, {r}) => {
+    instructor: isAuthenticatedResolver.createResolver(async (_, params, { r }) => {
       let item = await r.db(DB).table(INSTRUCTORS).get(params.id);
       return item;
     }),
 
     // return a list of time on that date, along with availability
-    timeSlotsByInstructor: isAuthenticatedResolver.createResolver(async (_, {instructorId, date}, {r}) => {
-      
+    timeSlotsByInstructor: isAuthenticatedResolver.createResolver(async (_, { instructorId, date }, { r }) => {
+
       // get the instructor name by id
-      let {name} = await r.db(DB).table(INSTRUCTORS).get(instructorId);
+      let { name } = await r.db(DB).table(INSTRUCTORS).get(instructorId);
 
       let slots = [];
 
@@ -243,7 +244,8 @@ module.exports = {
 
     // student
 
-    updateStudent: isAuthenticatedResolver.createResolver(async (_, {studentInput: input}, {r}) => {
+    updateStudent: isAuthenticatedResolver.createResolver(async (_, { studentInput: input }, { r }) => {
+   
       input = convertDateFieldsInStudentInputToRethinkdbFormat(r, input);
       await r.db(DB).table(STUDENTS).get(input.id).update(input);
       let item = await r.db(DB).table(STUDENTS).get(input.id);
@@ -251,7 +253,10 @@ module.exports = {
       return item;
     }),
 
-    createStudent: isAuthenticatedResolver.createResolver(async (_, {studentInput: input}, {r}) => {
+    createStudent: isAuthenticatedResolver.createResolver(async (_, { studentInput: input }, { r }) => {
+      if (!validateDateFieldsInStudent(input, 'mm/dd/yyyy')) {
+        throw 'Input dates format are not in mm/dd/yyyy'
+      }
       input = convertDateFieldsInStudentInputToRethinkdbFormat(r, input);
       input = sanitizeFieldsInStudentInput(input);
       let result = await r.db(DB).table(STUDENTS).insert(input);
@@ -261,7 +266,7 @@ module.exports = {
       return item;
     }),
 
-    deleteStudent: isAuthenticatedResolver.createResolver(async (_, {id}, {r}) => {
+    deleteStudent: isAuthenticatedResolver.createResolver(async (_, { id }, { r }) => {
       let item = await r.db(DB).table(STUDENTS).get(id);
       let result = await r.db(DB).table(STUDENTS).get(id).delete();
 
@@ -274,7 +279,7 @@ module.exports = {
 
     // appointment
 
-    updateAppointment: isAuthenticatedResolver.createResolver(async (_, {input}, {r}) => {
+    updateAppointment: isAuthenticatedResolver.createResolver(async (_, { input }, { r }) => {
 
       // deconstruct vars
       let {
@@ -307,7 +312,7 @@ module.exports = {
       return item;
     }),
 
-    createAppointment: isAuthenticatedResolver.createResolver(async (_, {input}, {r}) => {
+    createAppointment: isAuthenticatedResolver.createResolver(async (_, { input }, { r }) => {
 
       // deconstruct vars
       let {
@@ -330,7 +335,7 @@ module.exports = {
         startTime: convertDateTimeToRDate(date, time, r)
       };
 
-      let {generated_keys} = await r.db(DB).table(APPOINTMENTS).insert(item);
+      let { generated_keys } = await r.db(DB).table(APPOINTMENTS).insert(item);
       let id = generated_keys[0];
 
       // get from db
@@ -341,19 +346,19 @@ module.exports = {
 
     // car
 
-    updateCar: isAuthenticatedResolver.createResolver(async (_, {carInput}, {r}) => {
+    updateCar: isAuthenticatedResolver.createResolver(async (_, { carInput }, { r }) => {
       await r.db(DB).table(CARS).get(carInput.id).update(carInput);
       let car = await r.db(DB).table(CARS).get(carInput.id);
       return car;
     }),
 
-    createCar: isAuthenticatedResolver.createResolver(async (_, {carInput}, {r}) => {
+    createCar: isAuthenticatedResolver.createResolver(async (_, { carInput }, { r }) => {
       let result = await r.db(DB).table(CARS).insert(carInput);
       let car = await r.db(DB).table(CARS).get(carInput.id);
       return car;
     }),
 
-    deleteCar: isAuthenticatedResolver.createResolver(async (_, {id}, {r}) => {
+    deleteCar: isAuthenticatedResolver.createResolver(async (_, { id }, { r }) => {
       let item = await r.db(DB).table(CARS).get(id);
       let result = await r.db(DB).table(CARS).get(id).delete();
 
@@ -366,19 +371,19 @@ module.exports = {
 
     // instructor
 
-    createInstructor: isAuthenticatedResolver.createResolver(async (_, {instructorInput}, {r}) => {
+    createInstructor: isAuthenticatedResolver.createResolver(async (_, { instructorInput }, { r }) => {
       let result = await r.db(DB).table(INSTRUCTORS).insert(instructorInput);
       let item = await r.db(DB).table(INSTRUCTORS).get(instructorInput.id);
       return item;
     }),
 
-    updateInstructor: isAuthenticatedResolver.createResolver(async (_, {instructorInput}, {r}) => {
+    updateInstructor: isAuthenticatedResolver.createResolver(async (_, { instructorInput }, { r }) => {
       await r.db(DB).table(INSTRUCTORS).get(instructorInput.id).update(instructorInput);
       let item = await r.db(DB).table(INSTRUCTORS).get(instructorInput.id);
       return item;
     }),
 
-    deleteInstructor: isAuthenticatedResolver.createResolver(async (_, {id}, {r}) => {
+    deleteInstructor: isAuthenticatedResolver.createResolver(async (_, { id }, { r }) => {
       // console.log('delete');
       let item = await r.db(DB).table(INSTRUCTORS).get(id);
       let result = await r.db(DB).table(INSTRUCTORS).get(id).delete();
@@ -392,7 +397,7 @@ module.exports = {
   },
 
   Appointment: {
-    student: async (parent, params, {r}) => {
+    student: async (parent, params, { r }) => {
       if (!parent.studentId) {
         return parent.student;
       }
@@ -400,20 +405,20 @@ module.exports = {
       item = convertDateFieldsInStudentToHumanReadable(item);
       return item;
     },
-    instructor: async (parent, params, {r}) => {
+    instructor: async (parent, params, { r }) => {
       if (!parent.instructorId) return null;
       let instructor = await r.db(DB).table(INSTRUCTORS).get(parent.instructorId);
       return instructor;
     },
-    car: async (parent, params, {r}) => {
+    car: async (parent, params, { r }) => {
       if (!parent.carId) return null;
       let item = await r.db(DB).table(CARS).get(parent.carId);
       return item;
     },
-    date: async (parent, params, {r}) => {
+    date: async (parent, params, { r }) => {
       return moment(parent.startTime).format("L");
     },
-    time: async (parent, params, {r}) => {
+    time: async (parent, params, { r }) => {
       return moment(parent.startTime).format("LT");
     }
 

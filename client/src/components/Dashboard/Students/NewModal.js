@@ -48,18 +48,18 @@ export default class extends Component {
       this.setState({nameError: true});
       pass = false;
     }
-    if (this.state.firstDay == "") {
-      this.setState({firstDayError: true});
-      pass = false;
-    }
-    if (this.state.learnerPermitExp == "") {
-      this.setState({learnerPermitExpError: true});
-      pass = false;
-    }
-    if (this.state.dob == "") {
-      this.setState({dobError: true});
-      pass = false;
-    }
+    // if (this.state.firstDay == "") {
+    //   this.setState({firstDayError: true});
+    //   pass = false;
+    // }
+    // if (this.state.learnerPermitExp == "") {
+    //   this.setState({learnerPermitExpError: true});
+    //   pass = false;
+    // }
+    // if (this.state.dob == "") {
+    //   this.setState({dobError: true});
+    //   pass = false;
+    // }
 
     return pass;
   }
@@ -92,13 +92,13 @@ export default class extends Component {
                     error={this.state.nameError}
                   />
                   <Form.Group>
-                    <Form.Input label="First Day*" width={5} name="firstDay" value={this.state.firstDay}
+                    <Form.Input label="First Day (mm/dd/yyyy)" width={5} name="firstDay" value={this.state.firstDay}
                                 onChange={this.handleFieldChange} autoComplete="first day"
                     error={this.state.firstDayError}
                     />
                     <Form.Input label="Gender" width={5} name="gender" value={this.state.gender}
                                 onChange={this.handleFieldChange} autoComplete="gender"/>
-                    <Form.Input label="Date of Brith*" width={5} name="dob" value={this.state.dob}
+                    <Form.Input label="Dob (mm/dd/yyyy)" width={5} name="dob" value={this.state.dob}
                                 onChange={this.handleFieldChange} autoComplete="dob"
                                 error={this.state.dobError}
                     />
@@ -107,7 +107,7 @@ export default class extends Component {
                     <Form.Input label="Learner Permit No." width={5} name="learnerPermitNo"
                                 value={this.state.learnerPermitNo} onChange={this.handleFieldChange}
                                 autoComplete="learnerPermitNo"/>
-                    <Form.Input label="Learner Permit Exp." width={5} name="learnerPermitExp"
+                    <Form.Input label="Exp (mm/dd/yyyy)" width={5} name="learnerPermitExp"
                                 value={this.state.learnerPermitExp} onChange={this.handleFieldChange}
                                 autoComplete="learnerPermitExp"
                                 error={this.state.learnerPermitExpError}
@@ -179,7 +179,7 @@ export default class extends Component {
                         ...vars
                       } = this.state;
 
-                      // console.log(this.state);
+                      console.log(this.state);
                       await createStudent({variables: {studentInput: vars}});
 
                       // refetch student table data

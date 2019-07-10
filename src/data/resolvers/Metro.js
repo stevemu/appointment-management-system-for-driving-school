@@ -136,6 +136,8 @@ module.exports = {
           return item("startTime").date().eq(r.time(mDate.year(), mDate.month() + 1, mDate.date(), "Z"));
         });
 
+        console.log(items);
+
       return items;
     }),
 

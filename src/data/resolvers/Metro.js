@@ -136,7 +136,13 @@ module.exports = {
           return item("startTime").date().eq(r.time(mDate.year(), mDate.month() + 1, mDate.date(), "Z"));
         });
 
-        console.log(items);
+      // transform date to huamn readable
+      items = items.map((item) => {
+        // console.log(item);
+        return convertDateFieldsInAppointmentToHumanReadable(item);
+      });
+
+      console.log(items);
 
       return items;
     }),

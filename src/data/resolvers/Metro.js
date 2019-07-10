@@ -126,7 +126,8 @@ module.exports = {
     appointmentsByDate: isAuthenticatedResolver.createResolver(async (parent, { date }, { r }) => {
 
       // console.log(date);
-      let mDate = moment(date, "L").utcOffset("-04:00");
+      let mDate = moment(date, "L");
+      console.log(mDate);
 
       // filter by date
       // get pagination result

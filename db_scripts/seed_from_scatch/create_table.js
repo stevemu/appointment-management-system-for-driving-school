@@ -10,7 +10,8 @@ async function run() {
 
   // create db
   try {
-    await r.dbCreate("Metro");
+    await r.dbDrop(db);
+    await r.dbCreate(db);
 
   } catch (error) {
     console.log('db already exist');
@@ -21,6 +22,7 @@ async function run() {
   try {
     await r.db(db).tableCreate("Appointments");
     await r.db(db).table("Appointments").indexCreate("startDate")
+    await r.db(db).table("Appointments").indexCreate("startTime")
     await r.db(db).tableCreate("Cars");
     await r.db(db).tableCreate("Instructors");
     await r.db(db).tableCreate("Students");

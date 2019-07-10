@@ -196,7 +196,7 @@ module.exports = {
       // get the date
       // add 15m, convert to rdate, query
 
-      let dateMt = moment(date, "L");
+      let dateMt = moment(date, "L Z");
       dateMt.hour(8);
 
       for (let i = 0; i <= 36; i++) {

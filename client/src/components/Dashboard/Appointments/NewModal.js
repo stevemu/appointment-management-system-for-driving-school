@@ -30,7 +30,7 @@ export default class extends Component {
     super(props);
 
     this.state = {
-      date: moment().format("LC"),
+      date: moment().format("L"),
       time: "",
       studentId: "",
       note: "",
@@ -129,7 +129,7 @@ export default class extends Component {
       fetchPolicy: "network-only"
     })
 
-    // console.log(res);
+    console.log(res);
 
     this.setState({
       instructorTimeSlots: res.data.timeSlotsByInstructor,
@@ -481,7 +481,7 @@ export default class extends Component {
                       // generate an object to be sent to backend
                       let input = {
                         id: this.state.id,
-                        date: this.state.date.replace(/C/g, ''),
+                        date: this.state.date,
                         time: this.state.time,
                         timezoneOffset: moment().format("Z"),
                         studentId: this.state.student.id,
@@ -500,7 +500,7 @@ export default class extends Component {
 
                       // create new appt
                       let input = {
-                        date: this.state.date.replace(/C/g, ''),
+                        date: this.state.date,
                         time: this.state.time,
                         timezoneOffset: moment().format("Z"),
                         studentId: this.state.student.id,

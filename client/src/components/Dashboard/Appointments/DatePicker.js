@@ -60,15 +60,17 @@ export default class extends Component {
           this.client = client;
 
           // convert to moment format
-          let md = moment(data.currentDateSelection, "L");
+          let md = moment(data.currentDateSelection, "L", true);
 
           return (
             <SingleDatePicker
               date={md}
               isOutsideRange={() => false}
               onDateChange={date => {
+                if (!date) return;
+
                 // convert the moment to L format
-                let L = date.format("L");
+                let L = date.format("L", true);
 
                 // update the date in the global state
                 // make it loading so that the other component and fetch the data
@@ -78,8 +80,6 @@ export default class extends Component {
                     isAppointmentByDateTableLoading: true
                   }
                 });
-
-                // this.updateTableData(L);
 
               }}
               focused={this.state.focused}

@@ -195,7 +195,7 @@ module.exports = {
 
       // get the date from client with timezone, start from 8am, to 5pm
       console.log(date);
-      let dateMt = moment(date, "L Z");
+      let dateMt = moment.utc(date, "L Z");
 
       dateMt.hour(8);
       console.log(dateMt);

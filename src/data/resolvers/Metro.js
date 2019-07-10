@@ -194,17 +194,12 @@ module.exports = {
       let slots = [];
 
       // get the date from client with timezone, start from 8am, to 5pm
-      console.log(date);
-      let dateMt = moment.utc(date, "L Z");
-
+      let dateMt = moment.utc(date, "L Z").utcOffset("-04:00");
       dateMt.hour(8);
-      console.log(dateMt);
-      // console.log(dateMt.utc().format());
 
       for (let i = 0; i <= 36; i++) {
 
         // get appointments at this time
-        console.log(dateMt.utc().format());
         let rDate = r.ISO8601(dateMt.utc().format()); // make an copy to preserve the non-utc date in the original moment
         let result = await r.db(DB).table(APPOINTMENTS).filter({
           startTime: rDate,
@@ -224,7 +219,7 @@ module.exports = {
         }
 
         // generate time text
-        let timeText = dateMt.utc().format("LT");
+        let timeText = dateMt.utc().utcOffset("-04:00").format("LT");
         slots.push({
           time: timeText,
           isAvailable,
@@ -234,8 +229,6 @@ module.exports = {
         // add 15m
         dateMt.add(15, "m");
       }
-
-      // console.log(slots);
 
       return slots;
     }),

@@ -83,17 +83,13 @@ function convertDateFieldsInAppointmentToHumanReadable(item) {
   return item;
 }
 
-function convertDateTimeToRDate(date, time, r) {
+function convertDateTimeToRDate(date, time, timezoneOffset, r) {
+  let dateTime = date + " " + time + " " + timezoneOffset;
+  console.log(dateTime);
+  let m = moment.utc(dateTime, "MM/DD/YYYY h:mm a Z", true);
+  // console.log(m);
 
-  // calculate the startTime
-  let mDate = momentz.tz(date, "L", "America/New_York");
-  let mTime = momentz.tz(time, "LT", "America/New_York");
-
-  // update the mDate with times
-  mDate.hour(mTime.hour());
-  mDate.minute(mTime.minute());
-
-  return r.ISO8601(mDate.utc().format());
+  return r.ISO8601(m.utc().format());
 }
 
 

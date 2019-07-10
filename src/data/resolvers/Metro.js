@@ -293,7 +293,8 @@ module.exports = {
         note,
         studentId,
         date,
-        time
+        time,
+        timezoneOffset
       } = input;
 
       // insert to db
@@ -303,7 +304,7 @@ module.exports = {
         classType,
         note,
         studentId,
-        startTime: convertDateTimeToRDate(date, time, r)
+        startTime: convertDateTimeToRDate(date, time, timezoneOffset, r)
       };
 
       // update
@@ -325,7 +326,8 @@ module.exports = {
         note,
         studentId,
         date,
-        time
+        time,
+        timezoneOffset
       } = input;
 
       // insert to db
@@ -335,7 +337,7 @@ module.exports = {
         classType,
         note,
         studentId,
-        startTime: convertDateTimeToRDate(date, time, r)
+        startTime: convertDateTimeToRDate(date, time, timezoneOffset, r)
       };
 
       let { generated_keys } = await r.db(DB).table(APPOINTMENTS).insert(item);

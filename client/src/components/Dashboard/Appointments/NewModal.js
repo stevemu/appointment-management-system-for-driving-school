@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {MdClose} from 'react-icons/lib/md';
+import React, { Component } from 'react';
+import { MdClose } from 'react-icons/lib/md';
 import gql from "graphql-tag";
-import {Query, Mutation, ApolloConsumer} from "react-apollo";
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
-import {Form, Checkbox, Loader, Input, Dropdown, Dimmer, Search, Label} from 'semantic-ui-react'
+import { Query, Mutation, ApolloConsumer } from "react-apollo";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Form, Checkbox, Loader, Input, Dropdown, Dimmer, Search, Label } from 'semantic-ui-react'
 import LoadingSaveButton from '../../LoadingSaveButton';
 import moment from 'moment';
 import queryString from '../../../query-string';
-import {SingleDatePicker} from 'react-dates';
+import { SingleDatePicker } from 'react-dates';
 
 import {
   GET_APPOINTMENTS_BY_DATE,
@@ -60,18 +60,12 @@ export default class extends Component {
 
       mDate: moment()
     };
-    // console.log(this.props);
 
   }
-  //
-  // componentWillUnmount() {
-  //   console.log('unmounted');
-  // }
 
   async componentDidMount() {
     // get instructors from backend and generate the instructor options for the dropdown
 
-    console.log('did mount');
     this.setState({
       instructorOptionsLoading: true,
       carOptionsLoading: true
@@ -82,7 +76,6 @@ export default class extends Component {
       fetchPolicy: "network-only"
     });
 
-    // console.log(res.data.allInstructors);
     let instructorOptions = res.data.allInstructors.map((item) => {
       return {
         text: item.name,
@@ -104,25 +97,23 @@ export default class extends Component {
       carOptionsLoading: false
     });
 
-    // console.log();
-
     // put things in url query to the state
     if (this.props.location.search) {
       // console.log('here');
-      this.setState({...queryString.parse(this.props.location.search)}, () => {
-        this.handleInstructorChange(null, {value: this.state.instructorId});
-        this.handleStudentChange(null, {value: this.state.studentId});
+      this.setState({ ...queryString.parse(this.props.location.search) }, () => {
+        this.handleInstructorChange(null, { value: this.state.instructorId });
+        this.handleStudentChange(null, { value: this.state.studentId });
       })
     }
 
   }
 
   handleFieldChange = (e) => {
-    let {name, value} = e.target;
-    this.setState({[name]: value});
+    let { name, value } = e.target;
+    this.setState({ [name]: value });
   };
 
-  handleInstructorChange = async (e, {value}) => {
+  handleInstructorChange = async (e, { value }) => {
     this.setState({
       instructorTimeSlotsLoading: true
     });
@@ -167,7 +158,7 @@ export default class extends Component {
       <ul>
         {lis}
       </ul>
-      <Loader active={loading}/>
+      <Loader active={loading} />
     </div>
   }
 
@@ -185,9 +176,9 @@ export default class extends Component {
       return this.getDefaultTimeSlotsNode(false);
     }
 
-    console.log('slots:');
-    console.log(this.state.instructorTimeSlots);
-    let lis = this.state.instructorTimeSlots.map(({time, isAvailable, classType}) => {
+    // console.log('slots:');
+    // console.log(this.state.instructorTimeSlots);
+    let lis = this.state.instructorTimeSlots.map(({ time, isAvailable, classType }) => {
       if (isAvailable) {
         let selected = "";
         let className = "";
@@ -197,7 +188,7 @@ export default class extends Component {
         return <li key={time}><a href="#" className={className} onClick={(e) => {
           e.preventDefault();
           // store the time in the state
-          this.setState({time});
+          this.setState({ time });
         }}>{time}</a></li>
       } else {
         return <li key={time} className={"unavailable"}>{time} ({classType})</li>
@@ -215,7 +206,7 @@ export default class extends Component {
     </div>
   };
 
-  handleStudentChange = async (e, {value}) => {
+  handleStudentChange = async (e, { value }) => {
     // console.log('changed');
     // console.log(value);
 
@@ -235,20 +226,20 @@ export default class extends Component {
               }
           }
       `,
-      variables: {id: studentId}
+      variables: { id: studentId }
     });
 
     let student = res.data.student;
 
-    this.setState({student: student, studentId: student.id, studentText: generateStudentText(student)});
+    this.setState({ student: student, studentId: student.id, studentText: generateStudentText(student) });
 
   };
 
-  handleStudentSearchChange = async (e, {searchQuery}) => {
+  handleStudentSearchChange = async (e, { searchQuery }) => {
     // console.log('changed student search', searchQuery);
 
     // show loading
-    this.setState({studentSearchLoading: true});
+    this.setState({ studentSearchLoading: true });
 
     // search the backend
     let res = await this.client.query({
@@ -264,7 +255,7 @@ export default class extends Component {
               }
           }
       `,
-      variables: {query: searchQuery}
+      variables: { query: searchQuery }
     });
 
     let items = res.data.studentSearch;
@@ -280,12 +271,12 @@ export default class extends Component {
       return option;
     });
 
-    this.setState({studentOptions: options, studentSearchLoading: false});
+    this.setState({ studentOptions: options, studentSearchLoading: false });
 
     // console.log(res);
   };
 
-  handleNoteSearchChange = (e, {value}) => {
+  handleNoteSearchChange = (e, { value }) => {
 
     // console.log(value);
 
@@ -294,48 +285,48 @@ export default class extends Component {
     let searchResults = optionsArr.filter((item) => {
       return item.includes(value.toUpperCase());
     }).map((item) => {
-      return {title: item};
+      return { title: item };
     })
 
     // console.log(searchResults);
 
-    this.setState({noteSearchResults: searchResults, note: value, openNoteSearchResult: true});
+    this.setState({ noteSearchResults: searchResults, note: value, openNoteSearchResult: true });
 
   }
 
-  handleCarChange = (e, {value}) => {
-    this.setState({carId: value});
+  handleCarChange = (e, { value }) => {
+    this.setState({ carId: value });
   }
 
-  handleClassTypeChange = (e, {value}) => {
-    this.setState({classType: value});
+  handleClassTypeChange = (e, { value }) => {
+    this.setState({ classType: value });
   }
 
   validate = () => {
     let valid = true;
     if (!this.state.studentId) {
       valid = false;
-      this.setState({studentError: true});
+      this.setState({ studentError: true });
     }
     if (!this.state.date) {
       valid = false;
-      this.setState({dateError: true});
+      this.setState({ dateError: true });
     }
     if (!this.state.time) {
       valid = false;
-      this.setState({timeError: true});
+      this.setState({ timeError: true });
     }
     if (!this.state.carId) {
       valid = false;
-      this.setState({carError: true});
+      this.setState({ carError: true });
     }
     if (!this.state.instructorId) {
       valid = false;
-      this.setState({instructorError: true});
+      this.setState({ instructorError: true });
     }
     if (!this.state.classType) {
       valid = false;
-      this.setState({classTypeError: true});
+      this.setState({ classTypeError: true });
     }
 
     return valid;
@@ -344,26 +335,26 @@ export default class extends Component {
   render() {
 
     let classTypeOptions = [
-      {text: "One Class", value: "One Class"},
-      {text: "Two Class", value: "Two Class"},
-      {text: "Three Class", value: "Three Class"},
-      {text: "RT.Camb", value: "RT.Camb"},
-      {text: "RT.Quincy", value: "RT.Quincy"},
-      {text: "RT.DOR", value: "RT.DOR"},
-      {text: "RT.Braintree", value: "RT.Braintree"},
-      {text: "RT.Watertown", value: "RT.Watertown"},
-      {text: "Special RT.", value: "Special RT."},
-      {text: "SeeR.Camb", value: "SeeR.Camb"},
-      {text: "SeeR.Quincy", value: "SeeR.Quincy"},
-      {text: "SeeR.DOR", value: "SeeR.DOR"},
-      {text: "SeeR.Braintree", value: "SeeR.Braintree"},
-      {text: "SeeR.Watertown", value: "SeeR.Watertown"},
-      {text: "1cCan", value: "1cCan"},
-      {text: "2cCan", value: "2cCan"},
-      {text: "3cCan", value: "3cCan"},
-      {text: "RTCan", value: "RTCan"},
-      {text: "STCan", value: "STCan"},
-      {text: "SeCan", value: "SeCan"}
+      { text: "One Class", value: "One Class" },
+      { text: "Two Class", value: "Two Class" },
+      { text: "Three Class", value: "Three Class" },
+      { text: "RT.Camb", value: "RT.Camb" },
+      { text: "RT.Quincy", value: "RT.Quincy" },
+      { text: "RT.DOR", value: "RT.DOR" },
+      { text: "RT.Braintree", value: "RT.Braintree" },
+      { text: "RT.Watertown", value: "RT.Watertown" },
+      { text: "Special RT.", value: "Special RT." },
+      { text: "SeeR.Camb", value: "SeeR.Camb" },
+      { text: "SeeR.Quincy", value: "SeeR.Quincy" },
+      { text: "SeeR.DOR", value: "SeeR.DOR" },
+      { text: "SeeR.Braintree", value: "SeeR.Braintree" },
+      { text: "SeeR.Watertown", value: "SeeR.Watertown" },
+      { text: "1cCan", value: "1cCan" },
+      { text: "2cCan", value: "2cCan" },
+      { text: "3cCan", value: "3cCan" },
+      { text: "RTCan", value: "RTCan" },
+      { text: "STCan", value: "STCan" },
+      { text: "SeCan", value: "SeCan" }
     ];
     let mDate = this.state.date ? moment(this.state.date, "L") : moment();
     // console.log(mDate);
@@ -381,7 +372,7 @@ export default class extends Component {
                   <div><a href="" onClick={(e) => {
                     if (e) e.preventDefault();
                     this.props.history.goBack()
-                  }}><MdClose className="close"/></a></div>
+                  }}><MdClose className="close" /></a></div>
                 </header>
                 <div className="content">
                   <main>
@@ -401,12 +392,12 @@ export default class extends Component {
 
                     <label>Date:</label>
                     {/*<Input*/}
-                      {/*placeholder={"Date"}*/}
-                      {/*value={this.state.date}*/}
-                      {/*error={this.state.dateError}*/}
-                      {/*onChange={(e, {value}) => {*/}
-                        {/*this.setState({date: value});*/}
-                      {/*}}*/}
+                    {/*placeholder={"Date"}*/}
+                    {/*value={this.state.date}*/}
+                    {/*error={this.state.dateError}*/}
+                    {/*onChange={(e, {value}) => {*/}
+                    {/*this.setState({date: value});*/}
+                    {/*}}*/}
                     {/*/>*/}
                     <SingleDatePicker
                       date={mDate} // momentPropTypes.momentObj or null
@@ -461,11 +452,11 @@ export default class extends Component {
                       text={this.state.note}
                       onSearchChange={this.handleNoteSearchChange}
                       results={this.state.noteSearchResults}
-                      resultRenderer={({title}) => {
-                        return <Label content={title}/>
+                      resultRenderer={({ title }) => {
+                        return <Label content={title} />
                       }}
-                      onResultSelect={(e, {result}) => {
-                        this.setState({note: result.title});
+                      onResultSelect={(e, { result }) => {
+                        this.setState({ note: result.title });
                       }}
 
                     />
@@ -492,6 +483,7 @@ export default class extends Component {
                         id: this.state.id,
                         date: this.state.date,
                         time: this.state.time,
+                        timezoneOffset: moment().format("Z"),
                         studentId: this.state.student.id,
                         instructorId: this.state.instructorId,
                         carId: this.state.carId,
@@ -501,14 +493,17 @@ export default class extends Component {
 
                       let res = await this.client.mutate({
                         mutation: UPDATE_APPOINTMENT,
-                        variables: {input}
+                        variables: { input }
                       });
 
                     } else {
+
+                    
                       // create new appt
                       let input = {
                         date: this.state.date,
                         time: this.state.time,
+                        timezoneOffset: moment().format("Z"),
                         studentId: this.state.student.id,
                         instructorId: this.state.instructorId,
                         carId: this.state.carId,
@@ -516,9 +511,11 @@ export default class extends Component {
                         note: this.state.note
                       };
 
+                      // console.log(input);
+
                       let res = await this.client.mutate({
                         mutation: CREATE_APPOINTMENT,
-                        variables: {input}
+                        variables: { input }
                       });
 
                     }

@@ -113,6 +113,7 @@ input AppointmentInput {
   carId: ID!
   classType: String!
   note: String
+  timezoneOffset: String
 }
 
 type AppointmentsResult {

@@ -30,6 +30,13 @@
     "subscriptions-transport-ws": "^0.9.5",
     "uuid": "^3.2.1"
   },
+  "apps": [
+    {
+      "name": "metro",
+      "script": "node",
+      "args": "./src/index.js"
+    }
+  ],
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",

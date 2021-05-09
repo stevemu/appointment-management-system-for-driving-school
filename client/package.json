@@ -16,7 +16,7 @@
     "express-history-api-fallback": "^2.2.1",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "moment": "^2.22.2",
     "namor": "^1.0.1",
     "query-string": "^6.1.0",

@@ -17,7 +17,7 @@
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
     "lodash": "^4.17.10",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "namor": "^1.0.1",
     "query-string": "^6.1.0",
     "react": "^16.4.1",
